@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Customer Sign Up</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+}
+
+.card{
+    width:380px;
+    background:#fff;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+}
+
+h2{
+    text-align:center;
+    color:#ff5e62;
+    margin-bottom:10px;
+}
+
+label{
+    font-weight:bold;
+    display:block;
+    margin-top:12px;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin-top:6px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    box-sizing:border-box;
+}
+
+.error{
+    color:red;
+    font-size:13px;
+    display:none;
+    margin-top:4px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    margin-top:20px;
+    background:#ff5e62;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:hover{
+    background:#e14c50;
+}
+
+.link{
+    text-align:center;
+    margin-top:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>📝 Sign Up</h2>
+
+    <form id="signUp">
+        <label>Name</label>
+        <input type="text" id="signUpName">
+        <div class="error" id="nameError">Only letters allowed</div>
+
+        <label>Phone</label>
+        <input type="text" id="signUpPhone">
+        <div class="error" id="phoneError">Phone must be 10 digits</div>
+
+        <label>Password</label>
+        <input type="password" id="signUpPassword">
+        <div class="error" id="passwordError">Minimum 4 characters</div>
+
+        <button type="submit">Create Account</button>
+    </form>
+
+    <div class="link">
+        Already registered? <a href="signin.html">Sign In</a>
+    </div>
+</div>
+
+<script>
+const nameInput = document.getElementById("signUpName");
+const phoneInput = document.getElementById("signUpPhone");
+const passInput = document.getElementById("signUpPassword");
+
+const nameError = document.getElementById("nameError");
+const phoneError = document.getElementById("phoneError");
+const passwordError = document.getElementById("passwordError");
+
+/* Name validation */
+nameInput.addEventListener("input", () => {
+    nameError.style.display = /^[A-Za-z ]+$/.test(nameInput.value) ? "none" : "block";
+});
+
+/* Phone validation */
+phoneInput.addEventListener("input", () => {
+    phoneError.style.display = /^\d{10}$/.test(phoneInput.value) ? "none" : "block";
+});
+
+/* Password validation */
+passInput.addEventListener("input", () => {
+    passwordError.style.display = passInput.value.length >= 4 ? "none" : "block";
+});
+
+/* Submit */
+document.getElementById("signUp").addEventListener("submit", e => {
+    e.preventDefault();
+
+    if (
+        nameError.style.display === "none" &&
+        phoneError.style.display === "none" &&
+        passwordError.style.display === "none"
+    ) {
+        localStorage.setItem("customerName", nameInput.value.trim());
+        localStorage.setItem("customerPhone", phoneInput.value);
+        localStorage.setItem("customerPassword", passInput.value);
+
+        alert("✅ Account created successfully!");
+        window.location.href = "signin.html";
+    } else {
+        alert("❌ Please fix errors before submitting");
+    }
+});
+</script>
+
+</body>
+</html>
