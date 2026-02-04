@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Food Menu</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+}
+header {
+    background: #ff5e62;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 22px;
+}
+.container {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+}
+.menu {
+    flex: 3;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+    padding-bottom: 15px;
+}
+.card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+.card button {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.cart {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    height: fit-content;
+}
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 6px 0;
+}
+.confirm {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    background: #ff5e62;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>🍔 Online Food Ordering</header>
+
+<div class="container">
+
+<!-- MENU -->
+<div class="menu">
+    <div class="card">
+        <img src="https://www.foodandwine.com/thmb/XE8ubzwObCIgMw7qJ9CsqUZocNM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/MSG-Smash-Burger-FT-RECIPE0124-d9682401f3554ef683e24311abdf342b.jpg">
+        <h3>Burger</h3>
+        <div>₹120</div>
+        <button onclick="addToCart('Burger',120)">Add to Cart</button>
+    </div>
+
+    <div class="card">
+        <img src="https://myfoodstory.com/wp-content/uploads/2025/08/Dosa-Recipe-2.jpg">
+        <h3>Dosa</h3>
+        <div>₹80</div>
+        <button onclick="addToCart('Dosa',80)">Add to Cart</button>
+    </div>
+
+    <div class="card">
+        <img src="https://www.spicebangla.com/wp-content/uploads/2024/08/Spicy-Pasta-recipe-optimised-scaled.webp">
+        <h3>Pasta</h3>
+        <div>₹200</div>
+        <button onclick="addToCart('Pasta',200)">Add to Cart</button>
+    </div>
+
+    <div class="card">
+            <img src="https://www.recipetineats.com/uploads/2021/03/Kimchi-Fried-Rice-Skillet.jpg" alt="Fried Rice">
+            <h3>Fried Rice</h3>
+            <div class="price">₹150</div>
+            <button type="button" onclick="addToCart('Fried Rice',150)">Add to Cart</button>
+        </div>
+
+        <div class="card">
+            <img src="https://wholefoodsoulfoodkitchen.com/wp-content/uploads/2022/04/chocolate-milkshake-no-ice-cream-2.jpg" alt="Chocolate Shake">
+            <h3>Chocolate Shake</h3>
+            <div class="price">₹120</div>
+            <button type="button" onclick="addToCart('Chocolate Shake',120)">Add to Cart</button>
+        </div>
+
+        <div class="card">
+            <img src="https://images.themodernproper.com/production/posts/2022/EasyCurryRamen-_7.jpg?w=1200&h=1200&q=60&fm=jpg&fit=crop&dm=1747762318&s=803d88962aaa9940c70fcbc93ec1de87" alt="Ramen">
+            <h3>Ramen</h3>
+            <div class="price">₹100</div>
+            <button type="button" onclick="addToCart('Ramen',100)">Add to Cart</button>
+        </div>
+
+        <div class="card">
+            <img src="https://agratefulmeal.com/wp-content/uploads/2023/02/blue-mojito-curacao-cocktail-featured.jpg" alt="Mojito">
+            <h3>Mojito</h3>
+            <div class="price">₹80</div>
+            <button type="button" onclick="addToCart('Mojito',80)">Add to Cart</button>
+        </div>
+
+        <div class="card">
+            <img src="https://www.indianhealthyrecipes.com/wp-content/uploads/2022/12/podi-idli.webp" alt="Podi Idli">
+            <h3>Podi Idli</h3>
+            <div class="price">₹70</div>
+            <button type="button" onclick="addToCart('Podi Idli',70)">Add to Cart</button>
+        </div>
+</div>
+
+<!-- CART -->
+<div class="cart">
+    <h2>Cart</h2>
+    <div class="cart-items"></div>
+    <div class="total">Total: ₹0</div>
+    <button class="confirm" onclick="confirmOrder()">Confirm Order</button>
+</div>
+
+</div>
+
+<script>
+// 🔐 LOGIN CHECK
+if (localStorage.getItem("isLoggedIn") !== "true") {
+    alert("Please sign in first");
+    window.location.href = "signin.html";
+}
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+// ADD TO CART
+function addToCart(name, price) {
+    cart.push({ name, price });
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+}
+
+// REMOVE FROM CART
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+}
+
+// RENDER CART
+function renderCart() {
+    const cartDiv = document.querySelector(".cart-items");
+    cartDiv.innerHTML = "";
+    let total = 0;
+
+    cart.forEach((item, i) => {
+        total += item.price;
+        cartDiv.innerHTML += `
+            <div class="cart-item">
+                ${item.name} - ₹${item.price}
+                <button onclick="removeFromCart(${i})">x</button>
+            </div>
+        `;
+    });
+
+    document.querySelector(".total").innerText = "Total: ₹" + total;
+}
+
+// CONFIRM ORDER (✅ FIXED)
+function confirmOrder() {
+    if (cart.length === 0) {
+        alert("Cart is empty!");
+        return;
+    }
+
+    // copy cart → order
+    localStorage.setItem("currentOrder", JSON.stringify(cart));
+
+    // redirect
+    window.location.href = "order.html";
+}
+
+// INITIAL LOAD
+renderCart();
+</script>
+
+</body>
+</html>
