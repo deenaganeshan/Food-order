@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Customer Sign In</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+}
+.card{
+    width:380px;
+    background:#fff;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+}
+h2{
+    text-align:center;
+    color:#ff5e62;
+}
+label{
+    font-weight:bold;
+    display:block;
+    margin-top:12px;
+}
+input{
+    width:100%;
+    padding:10px;
+    margin-top:6px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+.error{
+    color:red;
+    font-size:13px;
+    display:none;
+    margin-top:4px;
+}
+button{
+    width:100%;
+    padding:12px;
+    margin-top:20px;
+    background:#ff5e62;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+.link{
+    text-align:center;
+    margin-top:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>🔐 Sign In</h2>
+
+<form id="signIn">
+    <label>Name</label>
+    <input type="text" id="signInName">
+    <div class="error" id="nameError">Only letters allowed</div>
+
+    <label>Password</label>
+    <input type="password" id="signInPassword">
+    <div class="error" id="passwordError">Password required</div>
+
+    <div class="error" id="loginError">Invalid name or password</div>
+
+    <button type="submit">Sign In</button>
+</form>
+
+<div class="link">
+    New user? <a href="signup.html">Create an account</a>
+</div>
+</div>
+
+<script>
+const nameInput = document.getElementById("signInName");
+const passInput = document.getElementById("signInPassword");
+
+const nameError = document.getElementById("nameError");
+const passwordError = document.getElementById("passwordError");
+const loginError = document.getElementById("loginError");
+
+nameInput.addEventListener("input", () => {
+    nameError.style.display =
+        /^[A-Za-z ]+$/.test(nameInput.value) ? "none" : "block";
+});
+
+passInput.addEventListener("input", () => {
+    passwordError.style.display =
+        passInput.value ? "none" : "block";
+});
+
+document.getElementById("signIn").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const savedName = localStorage.getItem("customerName");
+    const savedPassword = localStorage.getItem("customerPassword");
+
+    if (
+        savedName &&
+        savedPassword &&
+        nameInput.value.trim().toLowerCase() === savedName.toLowerCase() &&
+        passInput.value === savedPassword
+    ) {
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = "menu.html";   // ✅ REDIRECT
+    } else {
+        loginError.style.display = "block";
+    }
+});
+</script>
+
+</body>
+</html>
