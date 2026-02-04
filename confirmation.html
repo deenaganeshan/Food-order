@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Order Confirmed</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+}
+
+.box{
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    width:380px;
+}
+
+.box h1{
+    color:#28a745;
+    text-align:center;
+    margin-top:0;
+}
+
+.customer{
+    margin-top:10px;
+    background:#f9f9f9;
+    padding:10px;
+    border-radius:8px;
+    font-size:14px;
+}
+
+.items{
+    margin-top:15px;
+}
+
+.item{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:6px;
+}
+
+.total{
+    font-weight:bold;
+    margin-top:10px;
+    text-align:right;
+}
+
+a{
+    display:block;
+    margin-top:20px;
+    text-align:center;
+    text-decoration:none;
+    background:#ff5e62;
+    color:white;
+    padding:10px;
+    border-radius:6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h1>✅ Order Confirmed</h1>
+
+    <div class="customer" id="customerDetails"></div>
+
+    <div class="items" id="orderItems"></div>
+
+    <div class="total">
+        Total: ₹<span id="total">0</span>
+    </div>
+
+    <a href="menu.html" onclick="clearData()">Back to Menu</a>
+</div>
+
+<script>
+// 🔐 LOGIN CHECK
+if (localStorage.getItem("isLoggedIn") !== "true") {
+    window.location.href = "signin.html";
+}
+
+// 📦 GET ORDER DETAILS
+const order = JSON.parse(localStorage.getItem("orderDetails"));
+
+const customerDiv = document.getElementById("customerDetails");
+const itemsDiv = document.getElementById("orderItems");
+const totalSpan = document.getElementById("total");
+
+if (!order) {
+    customerDiv.innerText = "No order found!";
+} else {
+
+    // ✅ REAL CUSTOMER DETAILS (NO HARD CODING)
+    customerDiv.innerHTML = `
+        <strong>Name:</strong> ${order.customer.name}<br>
+        <strong>Phone:</strong> ${order.customer.phone}<br>
+        <strong>Address:</strong> ${order.customer.address}
+    `;
+
+    let total = 0;
+
+    order.items.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+            <span>${item.item} × ${item.qty}</span>
+            <span>₹${item.price * item.qty}</span>
+        `;
+        itemsDiv.appendChild(div);
+        total += item.price * item.qty;
+    });
+
+    totalSpan.innerText = total;
+}
+
+// 🧹 CLEAR ONLY ORDER DATA
+function clearData() {
+    localStorage.removeItem("orderDetails");
+}
+</script>
+
+</body>
+</html>
